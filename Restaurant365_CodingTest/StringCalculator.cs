@@ -12,6 +12,7 @@ namespace Restaurant365_CodingTest
         private int mResult = 0;
         private string mDelimiter;
         List<string> negativeNumbers = new List<string>();
+        private bool mUniqueStart = false;
 
         //Function to add the numbers in the string
         //param - numbers: the string given in the console
@@ -26,28 +27,32 @@ namespace Restaurant365_CodingTest
             if (numbers.StartsWith("//"))
             {
                 FindDelimiters(numbers);
-            }
-            
-            string[] stringArr = Splitting(numbers);
-            
-            foreach (string number in stringArr)
-            { 
-                if(Int32.TryParse(number.Trim(), out int result))
-                {
-                    if (result < 0)
-                        negativeNumbers.Add(result.ToString());
-                    else if(result <= 1000)
-                        mResult += result;
-                }
-            }
-            
-            if (negativeNumbers.Count > 0)
-            {
-                NegativeNumbersException(negativeNumbers);
+                mUniqueStart = true;
             }
 
+            if (!mUniqueStart)
+            {
+                string[] stringArr = Splitting(numbers);
+
+                foreach (string number in stringArr)
+                {
+                    if (Int32.TryParse(number.Trim(), out int result))
+                    {
+                        if (result < 0)
+                            negativeNumbers.Add(result.ToString());
+                        else if (result <= 1000)
+                            mResult += result;
+                    }
+                }
+
+                if (negativeNumbers.Count > 0)
+                {
+                    NegativeNumbersException(negativeNumbers);
+                }
+
+            }
             return mResult;
-            
+
         }
 
         //Function to add the numbers in the string with a unique delimiter string
