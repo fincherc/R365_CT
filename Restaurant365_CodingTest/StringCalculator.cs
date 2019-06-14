@@ -119,7 +119,7 @@ namespace Restaurant365_CodingTest
 
         //Function to remove the longer, unique delimiters in the string after passing the check
         //param - numbers: the string given in the console
-        //param - delimiter: the string encompassing the delimiters after passing the check
+        //param - delimiter: the string encompassing the longer, unique delimiters after passing the check
         //string[] - returns an array of the longer unique delimiters
         public string[] LongerUniqueSplitting(string numbers, string delimiter)
         {
