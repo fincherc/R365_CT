@@ -16,6 +16,7 @@ namespace Restaurant365_CodingTest
             Console.Write("Please enter a string for the String Calculator: ");
             string mReadIn = Console.ReadLine();
 
+
             Console.Write(calc.Add(mReadIn) + "\n");
             Console.ReadKey();
         }

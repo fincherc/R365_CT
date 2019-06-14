@@ -12,6 +12,7 @@ namespace Restaurant365_CodingTest
         private int mResult = 0;
         private string mDelimiter;
         List<string> negativeNumbers = new List<string>();
+        private bool mCheckFormat;
         private bool mUniqueStart = false;
 
         //Function to add the numbers in the string
@@ -24,34 +25,41 @@ namespace Restaurant365_CodingTest
                 return 0;
             }
 
-            if (numbers.StartsWith("//"))
-            {
-                FindDelimiters(numbers);
-                mUniqueStart = true;
-            }
+            mCheckFormat = CheckFormat(numbers);
 
-            if (!mUniqueStart)
+            if (mCheckFormat)
             {
-                string[] stringArr = Splitting(numbers);
-
-                foreach (string number in stringArr)
+                if (!mUniqueStart)
                 {
-                    if (Int32.TryParse(number.Trim(), out int result))
+                    string[] stringArr = Splitting(numbers);
+
+                    foreach (string number in stringArr)
                     {
-                        if (result < 0)
-                            negativeNumbers.Add(result.ToString());
-                        else if (result <= 1000)
-                            mResult += result;
+                        if (Int32.TryParse(number.Trim(), out int result))
+                        {
+                            if (result < 0)
+                                negativeNumbers.Add(result.ToString());
+                            else if (result <= 1000)
+                                mResult += result;
+                        }
+                    }
+
+                    if (negativeNumbers.Count > 0)
+                    {
+                        NegativeNumbersException(negativeNumbers);
                     }
                 }
-
-                if (negativeNumbers.Count > 0)
+                else
                 {
-                    NegativeNumbersException(negativeNumbers);
+                    FindDelimiters(numbers);
                 }
 
+                return mResult;
             }
-            return mResult;
+            else
+            {
+                return mResult;
+            }
 
         }
 
@@ -91,6 +99,29 @@ namespace Restaurant365_CodingTest
             return mResult;
         }
 
+        //Function to check the format of the string to check on whether it is in proper context
+        //param - input: the string given in the console
+        //bool - return true if format is correct, false otherwise with a statement
+        public bool CheckFormat(string input)
+        {
+            if (input.Contains(",") || input.Contains("\\n"))
+            {
+                mCheckFormat = true;
+                return mCheckFormat;
+            }
+            else if (input.StartsWith("//"))
+            {
+                mCheckFormat = true;
+                mUniqueStart = true;
+                return mCheckFormat;
+            }
+            else
+            {
+                Console.WriteLine("User input incorrect, the input must start with '//' or use a comma ',' and/or use a new line. Your answer will come out as 0.");
+                return mCheckFormat;
+            }
+        }
+
         //Function to remove the noted delimiters in the string after passing the check and enter the new Add function
         //param - numbers: the string given in the console
         //void - don't need to return anything
@@ -108,7 +139,7 @@ namespace Restaurant365_CodingTest
         //string[] - returns an array of the delimiters
         public string[] Splitting(string numbers)
         {
-            return numbers.Split(new string[] { ",", "\\r", "\\n" }, StringSplitOptions.RemoveEmptyEntries);
+                return numbers.Split(new string[] { ",", "\\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         //Function to remove the unqiue delimiters in the string after passing the check
