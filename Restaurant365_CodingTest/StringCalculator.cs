@@ -43,7 +43,7 @@ namespace Restaurant365_CodingTest
             
             if (negativeNumbers.Count > 0)
             {
-                throw new Exception($"Negatives not allowed: '{string.Join(", ", negativeNumbers.ToArray())}'");
+                NegativeNumbersException(negativeNumbers);
             }
 
             return mResult;
@@ -62,10 +62,8 @@ namespace Restaurant365_CodingTest
             {
                 stringArr = UniqueSplitting(numbers, delimiter);
             }
-            //7.Delimiters can be of any length with the following format:  “//[delimiter]\n” for example: “//[***]\n1***2***3” should return 6 - done
             else
             {
-                //delimiterList = delimiter.Split('[').Select(x => x.TrimEnd(']')).ToList();
                 stringArr = LongerUniqueSplitting(numbers, delimiter);
             }
             
@@ -82,7 +80,7 @@ namespace Restaurant365_CodingTest
 
             if (negativeNumbers.Count > 0)
             {
-                throw new Exception($"Negatives not allowed: '{string.Join(", ", negativeNumbers.ToArray())}'");
+                NegativeNumbersException(negativeNumbers);
             }
 
             return mResult;
@@ -126,8 +124,6 @@ namespace Restaurant365_CodingTest
             List<string> delimiterList = new List<string>();
             string newDelimiter = "";
 
-            //8.Allow multiple delimiters like this:  “//[delim1][delim2]\n” for example “//[*][%]\n1*2%3” should return 6. - done
-            //9.Make sure you can also handle multiple delimiters with length longer than one char - done
             if (delimiter.StartsWith("[") && delimiter.EndsWith("]"))
             {
 
@@ -151,6 +147,14 @@ namespace Restaurant365_CodingTest
             }
 
             return numbers.Split(delimiterList.ToArray(), StringSplitOptions.None);
+        }
+
+        //Function to execute if there are negative numbers
+        //param - Numbers: List of numbers that are negative
+        //Exception - displays an exception message noting the numbers that are negative from the string
+        public void NegativeNumbersException(List<string> Numbers)
+        {
+            throw new Exception($"Negatives not allowed: '{string.Join(", ", Numbers.ToArray())}'");
         }
     }
 }
