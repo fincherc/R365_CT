@@ -13,7 +13,6 @@ namespace Restaurant365_CodingTest
         private string mDelimiter;
         List<string> negativeNumbers = new List<string>();
         private bool mCheckFormat;
-        private bool mUniqueStart = false;
 
         //Function to add the numbers in the string
         //param - numbers: the string given in the console
@@ -25,11 +24,22 @@ namespace Restaurant365_CodingTest
                 return 0;
             }
 
+            if (int.TryParse(numbers, out int numResult))
+            {
+                if(numResult >= 0)
+                    return numResult;
+                else
+                {
+                    negativeNumbers.Add(numResult.ToString());
+                    NegativeNumbersException(negativeNumbers);
+                }
+            }
+
             mCheckFormat = CheckFormat(numbers);
 
             if (mCheckFormat)
             {
-                if (!mUniqueStart)
+                if (!numbers.StartsWith("//"))
                 {
                     string[] stringArr = Splitting(numbers);
 
@@ -104,15 +114,9 @@ namespace Restaurant365_CodingTest
         //bool - return true if format is correct, false otherwise with a statement
         public bool CheckFormat(string input)
         {
-            if (input.Contains(",") || input.Contains("\\n"))
+            if (input.Contains(",") || input.Contains("\\n") || (input.StartsWith("//") && input.Contains("\\n")) )
             {
                 mCheckFormat = true;
-                return mCheckFormat;
-            }
-            else if (input.StartsWith("//"))
-            {
-                mCheckFormat = true;
-                mUniqueStart = true;
                 return mCheckFormat;
             }
             else
@@ -158,28 +162,16 @@ namespace Restaurant365_CodingTest
         public string[] LongerUniqueSplitting(string numbers, string delimiter)
         {
             List<string> delimiterList = new List<string>();
-            string newDelimiter = "";
+            //string newDelimiter = "";
+            //bool mInside = false;
 
             if (delimiter.StartsWith("[") && delimiter.EndsWith("]"))
             {
-
-                char[] delimiterChar = delimiter.ToCharArray();
-
-                for (int i = 0; i < delimiterChar.Length; i++)
-                {
-                    if (delimiterChar[i] != '[' && delimiterChar[i] != ']')
-                    {
-                        if (delimiterChar[i + 1] != ']')
-                            newDelimiter += delimiterChar[i].ToString();
-                        else
-                            delimiterList.Add(delimiterChar[i].ToString());
-                    }
-
-                    if (delimiterChar[i] == ']')
-                    {
-                        newDelimiter = "";
-                    }
-                }
+                delimiterList = delimiter.Split('[').Select(x => x.TrimEnd(']')).ToList();
+            }
+            else
+            {
+                Console.WriteLine("Invalid input, please ensure that all brackets are closed to ensure delimiters are chosen. ex. //[**]\n1**2**3. Answer output will be zero.");
             }
 
             return numbers.Split(delimiterList.ToArray(), StringSplitOptions.None);
